@@ -16,9 +16,9 @@ mkdir -p $PG_DATA/cf_tblspc/cf_hawk_idx
 
 chown -R Postgres:Postgres $PG_DATA/cf_tblspc
 
-#createdb -T template1 -E UTF8 -O postgres CampFire
+createdb -T template1 -E UTF8 -O postgres CampFire
 
-#psql -d CampFire -U Postgres < Setup.sql
+psql -d CampFire -U Postgres < Setup.sql
 psql -d CampFire -U Postgres < DropsDDL.sql
 psql -d CampFire -U Postgres < ScheduleDDL.sql
 psql -d CampFire -U Postgres < TaskDDL.sql

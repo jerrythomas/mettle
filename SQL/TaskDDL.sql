@@ -155,7 +155,12 @@ Local config
 
 
 
+  Views
 
+    Process_queue
+    Ready to load
+    Progress/status
+    Performance Log
 
   Map Screens
     Design
@@ -243,7 +248,6 @@ CREATE TABLE chain
   ,precursor_id             NUMERIC(10)
   ,successor_id             NUMERIC(10)
   ,kind                     VARCHAR(25)     -- KEY,CONFLICT,DEPENDENCY,CASCADE
-  ,precursor_status         VARCHAR         -- to be used with regex comparison on precursor status
   ,wait                     BOOLEAN                  DEFAULT FALSE
   ,enabled                  BOOLEAN                  DEFAULT TRUE  -- When disabling any task disable the dependency if it has wait = TRUE
   ,modified_at              TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -277,35 +281,39 @@ A task can be part of a workflow
 a workflow can
 
 */
-/*
--- option to be explored for greated flexibility in using optional parameters when executing manual tasks
--- this may impact the way the task has to be initiated.
--- manual executions would be run using the anytime schedule
--- any restrictions on the number of running processes?
 
--- List of optional parameters
+CREATE SEQUENCE clone_id_sq
+     START WITH 1
+   INCREMENT BY 1;
+
+CREATE TABLE clone
+(
+   id                       NUMERIC(10)     PRIMARY KEY DEFAULT NEXTVAL('clone_id_sq')
+   ,task_id                  NUMERIC(10)     
+   ,clone_number             NUMERIC(10)
+   ,stop_on_upper_bound      BOOLEAN         DEFAULT FALSE
+   ,clone_reason             VARCHAR
+   ,parameter_expression     VARCHAR
+   ,ts_lower_bound           TIMESTAMP 
+   ,ts_upper_bound           TIMESTAMP -- after it reaches the ub it will not run anymore 
+);  
+
 CREATE SEQUENCE parameter_id_sq
      START WITH 1
    INCREMENT BY 1;
 
 CREATE TABLE parameter
 (
-   id                       NUMERIC(10)     PRIMARY KEY DEFAULT NEXTVAL('parameter_id_sq')
-  ,task_id                  NUMERIC(10)
-  ,kind                     VARCHAR(25)     -- 'OPTIONAL, stage? can this be used in one of the filter stages?'
-  ,entity_name              VARCHAR(50)     -- source entity this applies to
-  ,field_name               VARCHAR(50)     -- source entity field this applies to
-  ,data_type                VARCHAR(25)     -- data type of the field
-  ,condition                VARCHAR(25)     -- IN, Not IN, = , like, <> between
-  ,enabled                  BOOLEAN                  DEFAULT TRUE
-  ,modified_at              TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-  ,modified_by              VARCHAR(50)              DEFAULT CURRENT_USER
+   id                       NUMERIC(10)     PRIMARY KEY DEFAULT NEXTVAL('clone_id_sq')
+   ,clone_id
+   ,seq                      NUMERIC(10)
+   ,data_type
+   ,column_name
+   ,expression               -- like = <> > <
 );
-
-ALTER INDEX parameter_pkey SET TABLESPACE cf_core_idx;
-
-ALTER TABLE parameter
-        ADD CONSTRAINT parameter_precursor_fk
-               FOREIGN KEY (task_id)
-            REFERENCES task (id);
-*/
+create table core.paramvalue
+(
+  id
+  ,parameter_id
+  ,value          varchar
+) ;  

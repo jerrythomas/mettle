@@ -205,42 +205,4 @@ EXCEPTION
 END;
 $$ LANGUAGE plpgsql;
 
--- initiate a manual submission of a task with the optional argument expressions to be used
--- in_expression may be a collection of the optional parameters and the values to be used.
--- may need a redesign for optimal usage & functionality
-CREATE OR REPLACE FUNCTION core.initiate(in_task_id
-                                        ,in_expression
-                                        ,in_ts_lower_bound
-                                        ,in_ts_upper_bound)
-RETURNS NUMERIC
-AS $$
-DECLARE
-   num_rows  numeric := 0;
-BEGIN
-   INSERT INTO logs.process(task_id
-                           ,status
-                           ,scheduled_at
-                           ,slicing_mode
-                           ,process_mode
-                           ,expression
-                           ,ts_lower_bound
-                           ,ts_upper_bound)
-        SELECT id
-              ,'Initiated'
-              ,now()
-              ,slicing_mode
-              ,'Manual'
-              ,in_expression
-              ,in_ts_lower_bound
-              ,in_ts_upper_bound
-         FROM core.task
-        WHERE id = in_task_id;
 
-   GET DIAGNOSTICS num_rows = ROW_COUNT;
-
-   RETURN num_rows;
-EXCEPTION
-   WHEN OTHERS THEN
-      RAISE NOTICE '% %', SQLSTATE, SQLERRM;
-END;
-$$ LANGUAGE plpgsql;

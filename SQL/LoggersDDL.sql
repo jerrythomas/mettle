@@ -104,9 +104,7 @@ CREATE TABLE process
    ,completed_at                    TIMESTAMP WITH TIME ZONE      -- Completion TS
    ,wait_duration                   INTERVAL       -- Wait Time
    ,run_duration                    INTERVAL       -- Time Taken
-   ,slicing_mode                    VARCHAR(10)    -- Time/Unique/Ref Key
-   ,process_mode                    VARCHAR(10)    -- for an option to say this is a manual process.
-   ,expression                      TEXT           -- expression to be evaluated for use in the manual processes
+   ,slicing_mode                    CHAR(10)    -- Time/Unique/Ref Key
    ,ts_lower_bound                  TIMESTAMP      --
    ,ts_upper_bound                  TIMESTAMP      --
    ,ns_lower_bound                  NUMERIC(10)    --
@@ -238,11 +236,11 @@ CREATE TABLE clients
   ,client_port                    NUMERIC(10)
   ,thread_id                      INTEGER
   ,socket_fd                      INTEGER
-  ,use_ssl                        BOOLEAN
+  ,uses_ssl                       CHAR(1)
   ,last_synchronized_on           TIMESTAMP
   ,last_connected_on              TIMESTAMP
   ,last_disconnected_at           TIMESTAMP
-  ,connected                      BOOLEAN
+  ,connected                      CHAR(1)
   ,client_type                    VARCHAR(10) -- Big-Top (the developer UI), ETL-App (Application executing)
 );
 
@@ -251,29 +249,4 @@ ALTER INDEX clients_pkey SET TABLESPACE cf_logs_idx;
 CREATE UNIQUE INDEX clients_ukey
                  ON clients(client_ip,client_port);
 
--- List of optional parameters applied to a specific process
-CREATE SEQUENCE parameter_id_sq
-     START WITH 1
-   INCREMENT BY 1;
 
-CREATE TABLE parameter
-(
-   id                       NUMERIC(10)     PRIMARY KEY DEFAULT NEXTVAL('parameter_id_sq')
-  ,process_id               NUMERIC(10)
-  ,kind                     VARCHAR(25)     -- 'OPTIONAL, stage? can this be used in one of the filter stages?'
-  ,entity_name              VARCHAR(50)     -- source entity this applies to
-  ,field_name               VARCHAR(50)     -- source entity field this applies to
-  ,data_type                VARCHAR(25)     -- data type of the field
-  ,condition                VARCHAR(25)     -- IN, Not IN, = , like, <> between
-  ,expression               TEXT            -- IN, Not IN, = , like, <> between
-  ,enabled                  BOOLEAN                  DEFAULT TRUE
-  ,modified_at              TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-  ,modified_by              VARCHAR(50)              DEFAULT CURRENT_USER
-);
-
-ALTER INDEX parameter_pkey SET TABLESPACE cf_core_idx;
-
-ALTER TABLE parameter
-        ADD CONSTRAINT parameter_precursor_fk
-               FOREIGN KEY (process_id)
-            REFERENCES process (id);

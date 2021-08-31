@@ -1,35 +1,3 @@
--- $Header LoggersF.sql 1.00 05-Jun-2009 Jerry Thomas
---------------------------------------------------------------------------------
---  JTActivityLog.m
---  Mettle
---
---  Created by Jerry Thomas on 6/10/09.
---  Copyright 2009 Jerry Thomas. All rights reserved.
---------------------------------------------------------------------------------
-
--- Updates the unix pid for the task spawned and also marks the process as
--- launched. Returns true if update was successful
-CREATE OR REPLACE FUNCTION logs.process_launch(in_pid    NUMERIC   -- id of the process
-                                              ,in_ospid  NUMERIC)  -- id of the os process
-RETURNS BOOLEAN
-AS $$
-DECLARE
-   num_rows  NUMERIC := 0;
-BEGIN
-   UPDATE logs.process
-      SET status       = 'Launched'
-         ,os_pid       = in_ospid
-    WHERE id = in_pid;
-
-   GET DIAGNOSTICS num_rows = ROW_COUNT;
-
-   RETURN (num_rows = 1);
-EXCEPTION
-   WHEN OTHERS THEN
-      RAISE NOTICE '% %', SQLSTATE, SQLERRM;
-END;
-$$ LANGUAGE plpgsql;
-
 --------------------------------------------------------------------------------
 -- Function   : logs.process_mark
 -- Author     : Jerry Thomas
@@ -50,19 +18,14 @@ DECLARE
 BEGIN
    UPDATE logs.process
       SET status       = in_status
-         ,completed_at = (CASE WHEN in_status IN ('Sucessful','Failed','Killed','Crashed')
-                               THEN NOW()
-                               ELSE completed_at
+         ,completed_at = (CASE WHEN in_status IN ('Sucessful','Failed','Killed','Crashed') 
+                               THEN NOW() 
+                               ELSE completed_at 
                            END)
          ,run_duration = NOW() - initiated_at
     WHERE id = in_pid;
-
+         
    GET DIAGNOSTICS num_rows = ROW_COUNT;
-
-   -- Generate a notification for trigerring successors.
-   IF (num_rows = 1) THEN
-       NOTIFY CF_COMPLETED_A_TASK;
-   END IF;
 
    RETURN (num_rows = 1);
 EXCEPTION
@@ -97,7 +60,7 @@ BEGIN
       SET stage = s.kind
      FROM logs.stage s
     WHERE s.id = stg_id;
-
+         
    RETURN stg_id;
 EXCEPTION
    WHEN OTHERS THEN
@@ -126,14 +89,14 @@ BEGIN
       SET wait_duration= NOW() - initiated_at
          ,wait_reason  = in_reason
     WHERE id = in_id;
-
+   
    GET DIAGNOSTICS num_rows = ROW_COUNT;
-
+   
    UPDATE logs.process p
       SET p.wait_duration = COALESCE(p.wait_duration,0) + s.wait_duration
      FROM logs.stage s
     WHERE s.id = in_id
-      AND p.id = s.process_id;
+      AND p.id = s.process_id; 
 
 
    RETURN (num_rows > 0);
