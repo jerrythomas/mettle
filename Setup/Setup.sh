@@ -1,7 +1,9 @@
 #CF-Setup.sh
 #!/bin/sh
-
-PG_DATA=/usr/local/pgsql/data
+PG_USER=_postgres
+PG_DATA=/Database
+PG_HOME=/usr/local/postgresql/bin
+TMP=/tmp
 
 mkdir -p $PG_DATA/cf_tblspc/cf_core_dat
 mkdir -p $PG_DATA/cf_tblspc/cf_core_idx
@@ -14,30 +16,31 @@ mkdir -p $PG_DATA/cf_tblspc/cf_link_idx
 mkdir -p $PG_DATA/cf_tblspc/cf_hawk_dat
 mkdir -p $PG_DATA/cf_tblspc/cf_hawk_idx
 
-chown -R Postgres:Postgres $PG_DATA/cf_tblspc
+chown -R $PG_USER:$PG_USER $PG_DATA/cf_tblspc
 
-createdb -T template1 -E UTF8 -O postgres CampFire
+sudo -u $PG_USER $PG_HOME/createdb -T template0 -E UTF8 -O $PG_USER CampFire 
 
-psql -d CampFire -U Postgres < Setup.sql
-psql -d CampFire -U Postgres < DropsDDL.sql
-psql -d CampFire -U Postgres < ScheduleDDL.sql
-psql -d CampFire -U Postgres < TaskDDL.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < Setup.sql
+cd ../SQL
+$PG_HOME/psql -d CampFire -U $PG_USER < DropsDDL.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < ScheduleDDL.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < TaskDDL.sql
 
-psql -d CampFire -U Postgres < LoggersDDL.sql
-psql -d CampFire -U Postgres < LoggersV.sql
-psql -d CampFire -U Postgres < LoggersF.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < LoggersDDL.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < LoggersV.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < LoggersF.sql
 
-sed s/cf_logs/cf_arch/g  LoggersDDL.sql | sed s/logs,public/archive,public/g > LogArchDDL.sql
-psql -d CampFire -U Postgres < LogArchDDL.sql
-rm LogArchDDL.sql
-sed s/cf_logs/cf_arch/g  LoggersV.sql | sed s/logs,public/archive,public/g > LogArchV.sql
-psql -d CampFire -U Postgres < LogArchV.sql
-rm LogArchV.sql
+sed s/cf_logs/cf_arch/g  LoggersDDL.sql | sed s/logs,public/archive,public/g > $TMP/LogArchDDL.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < $TMP/LogArchDDL.sql
+rm $TMP/LogArchDDL.sql
+sed s/cf_logs/cf_arch/g  LoggersV.sql | sed s/logs,public/archive,public/g > $TMP/LogArchV.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < $TMP/LogArchV.sql
+rm $TMP/LogArchV.sql
 
-psql -d CampFire -U Postgres < ScheduleF.sql
-psql -d CampFire -U Postgres < ScheduleV.sql
-psql -d CampFire -U Postgres < HawkV.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < ScheduleF.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < ScheduleV.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < HawkV.sql
 
-psql -d CampFire -U Postgres < ScheduleDAT.sql
-psql -d CampFire -U Postgres < TaskDAT.sql
+$PG_HOME/psql -d CampFire -U $PG_USER < ScheduleDAT.sql
+#$PG_USER/psql -d CampFire -U $PG_USER < TaskDAT.sql
 

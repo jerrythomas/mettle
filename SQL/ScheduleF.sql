@@ -1,24 +1,31 @@
+CREATE OR REPLACE FUNCTION core.last_day(date)
+RETURNS date AS
+$$
+  SELECT (date_trunc('MONTH', $1) + INTERVAL '1 MONTH - 1 day')::date;
+$$ LANGUAGE 'sql' IMMUTABLE STRICT;
+
 -- Extracts and provides the nth day of the current month. If no value provided returns current day
-CREATE OR REPLACE FUNCTION Core.DayOfThisMonth(dayof  DOUBLE PRECISION)
+CREATE OR REPLACE FUNCTION core.DayOfThisMonth(dayof  DOUBLE PRECISION)
 RETURNS INTEGER AS $$
 DECLARE
    dy   INTEGER;
    ldy  INTEGER;
+   
 BEGIN
 
    IF dayof IS NULL THEN
       RETURN EXTRACT(DAY FROM NOW());
    END IF;
-   ldy := extract(DAY FROM CAST(date_trunc('month', now()) + INTERVAL '1 month' - INTERVAL '1 day' AS DATE));
+   ldy := extract(DAY FROM (date_trunc('month', now()) + INTERVAL '1 month - 1 day'));
 
    IF dayof = 0 THEN
      dy:= ldy;
    ELSIF dayof < 0 THEN
-     dy:= extract(DAY FROM CAST(date_trunc('month', now()) + INTERVAL '1 month' + (dayof||' days')::INTERVAL AS DATE));
-   ELSIF dayof < ldy THEN
-     dy := dayof;
+     dy:= extract(DAY FROM (date_trunc('month', now()) + INTERVAL '1 month' + (dayof||' days')::INTERVAL));
+   --ELSIF dayof < ldy THEN
+   --  dy := dayof;
    ELSE
-     dy := ldy;
+     dy := LEAST(dayof,ldy);
    END IF;
 
    RETURN dy;
@@ -28,8 +35,8 @@ EXCEPTION
 END;
 $$ LANGUAGE plpgsql;
 
--- Extracts and provides the nth day of the month.
-CREATE OR REPLACE FUNCTION Core.DayOf(xtr_dt DATE
+-- Extracts and provides the nth day of the month. If N is empty return current day
+CREATE OR REPLACE FUNCTION core.DayOf(xtr_dt DATE
                                      ,dayof  INTEGER)
 RETURNS INTEGER AS $$
 DECLARE
@@ -38,18 +45,19 @@ DECLARE
 BEGIN
 
    IF dayof IS NULL THEN
-      RETURN NULL;
+      --RETURN NULL;
+      RETURN EXTRACT(DAY FROM xtr_dt);
    END IF;
-   ldy := extract(DAY FROM CAST(date_trunc('month', xtr_dt) + INTERVAL '1 month' - INTERVAL '1 day' AS DATE));
+   ldy := extract(DAY FROM (date_trunc('month', xtr_dt) + INTERVAL '1 month - 1 day'));
 
    IF dayof = 0 THEN
      dy:= ldy;
    ELSIF dayof < 0 THEN
-     dy:= extract(DAY FROM CAST(date_trunc('month', xtr_dt) + INTERVAL '1 month' + (dayof||' days')::INTERVAL AS DATE));
-   ELSIF dayof < ldy THEN
-     dy := dayof;
+     dy:= extract(DAY FROM (date_trunc('month', xtr_dt) + INTERVAL '1 month + '|| dayof ||' days'));
+   --ELSIF dayof < ldy THEN
+   --  dy := dayof;
    ELSE
-     dy := ldy;
+     dy := LEAST(dayof,ldy);
    END IF;
 
    RETURN dy;
@@ -60,7 +68,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION Core.last_of_month (in_ts TIMESTAMP
+CREATE OR REPLACE FUNCTION core.last_of_month (in_ts TIMESTAMP
                                               ,n     INTEGER
                                               ,typ   VARCHAR)
 RETURNS TIMESTAMP AS $$
@@ -93,7 +101,7 @@ END;
 $cal_trigger$ LANGUAGE plpgsql;
 
 CREATE TRIGGER cal_trigger AFTER INSERT ON core.calendar
-                              FOR EACH ROW
+                             FOR EACH ROW
                          EXECUTE PROCEDURE core.update_calendar() ;
 
 
@@ -181,13 +189,15 @@ BEGIN
                            ,scheduled_at
                            ,slicing_mode
                            ,ts_lower_bound
-                           ,ts_upper_bound)
+                           ,ts_upper_bound
+                           ,original_process_id)
         SELECT id
               ,'Initiated'
               ,schedule_ts
               ,slicing_mode
               ,ts_lower_bound
               ,ts_upper_bound
+              ,original_process_id
          FROM core.runnable_v;
 
    GET DIAGNOSTICS num_rows = ROW_COUNT;
@@ -205,4 +215,65 @@ EXCEPTION
 END;
 $$ LANGUAGE plpgsql;
 
+-- initiate a manual submission of a task with the optional argument expressions to be used
+-- in_expression may be a collection of the optional parameters and the values to be used.
+-- may need a redesign for optimal usage & functionality
+CREATE OR REPLACE FUNCTION core.initiate(in_task_id        NUMERIC
+                                        ,in_expression     TEXT
+                                        ,in_ts_lower_bound TIMESTAMP
+                                        ,in_ts_upper_bound TIMESTAMP)
+RETURNS NUMERIC
+AS $$
+DECLARE
+   num_rows  numeric := 0;
+BEGIN
+   INSERT INTO logs.process(task_id
+                           ,status
+                           ,scheduled_at
+                           ,slicing_mode
+                           ,process_mode
+                           ,expression
+                           ,ts_lower_bound
+                           ,ts_upper_bound)
+        SELECT id
+              ,'Initiated'
+              ,now()
+              ,slicing_mode
+              ,'Manual'
+              ,in_expression
+              ,in_ts_lower_bound
+              ,in_ts_upper_bound
+         FROM core.task
+        WHERE id = in_task_id;
 
+   GET DIAGNOSTICS num_rows = ROW_COUNT;
+
+   RETURN num_rows;
+EXCEPTION
+   WHEN OTHERS THEN
+      RAISE NOTICE '% %', SQLSTATE, SQLERRM;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION logs.mark_reprocess()
+RETURNS NUMERIC
+AS $$
+DECLARE
+   num_rows  numeric := 0;
+BEGIN
+   UPDATE p
+      SET p.reprocessed         = true
+     FROM logs.process p
+          INNER JOIN logs.process px
+                  ON px.task_id             = p.task_id
+                 AND px.original_process_id = p.id
+                 AND px.status              = 'Initiated';
+
+   GET DIAGNOSTICS num_rows = ROW_COUNT;
+
+   RETURN num_rows;
+EXCEPTION
+   WHEN OTHERS THEN
+      RAISE NOTICE '% %', SQLSTATE, SQLERRM;
+END;
+$$ LANGUAGE plpgsql;                           

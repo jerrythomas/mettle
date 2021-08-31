@@ -155,12 +155,7 @@ Local config
 
 
 
-  Views
 
-    Process_queue
-    Ready to load
-    Progress/status
-    Performance Log
 
   Map Screens
     Design
@@ -184,39 +179,42 @@ CREATE SEQUENCE task_id_sq
      START WITH 1
    INCREMENT BY 1;
 
+-- DDL for the Task 
 CREATE TABLE task
 (
    id                       NUMERIC(10)     PRIMARY KEY DEFAULT NEXTVAL('task_id_sq')
   ,name                     VARCHAR(150)
-  ,task_type                VARCHAR(15)      --[dimension, Fact, Relational etc]
+  ,task_type                VARCHAR(15)      --[Dimension, Fact, Relational, App etc]
   ,schedule_id              NUMERIC(10)      -- Actual schedule for execution
   ,executable               VARCHAR(50)      -- executable file name
   ,process_mode             VARCHAR(15)     DEFAULT 'AUTO' --[AUTO/INCR/TIMED/EVENT]
   ,slicing_mode             VARCHAR(10)     DEFAULT 'TIME' --[time/number]
   ,logging_mode             INTEGER         DEFAULT 2      --[TRACE-5/DEBUG-4/INFO-3/PACE-2/WARN-1/ERROR-0]
   ,ts_start_with            TIMESTAMP       DEFAULT '01-01-2000'
-  ,ts_increment_by          INTERVAL
-  ,ns_start_with            NUMERIC
-  ,ns_increment_by          NUMERIC
+  ,ts_increment_by          INTERVAL        DEFAULT '00:00:00'  -- Assume no increment for next run
+--  ,ns_start_with            NUMERIC
+--  ,ns_increment_by          NUMERIC -- not required as we can simulate time based slicing even if source does not have timestamp
   ,max_retries              NUMERIC(5)      -- [0 indicates no retries]
   ,max_running              NUMERIC(5)      DEFAULT 0 -- [Number of parallel instances, 0 indicates unlimited]
-  ,incremental_option       NUMERIC(5)      --[change capture/diff/audit columns]
-  ,process_offset           INTERVAL        DEFAULT '00:00:00'
-  ,retry_interval           INTERVAL        DEFAULT '5 minutes'
-  ,retain_period            INTERVAL        DEFAULT '7 days'
-  ,dynamic_split            BOOLEAN         DEFAULT FALSE
-  ,process_rowlimit         NUMERIC
+  ,incremental_option       NUMERIC(5)                          -- Method of identifying change capture [diff/audit columns] stream, gg etc
+  ,process_offset           INTERVAL        DEFAULT '00:00:00'  -- 
+  ,retry_interval           INTERVAL        DEFAULT '5 minutes' -- Time between retries for failed tasks
+  ,retain_period            INTERVAL        DEFAULT '7 days'    -- Staging data retention period
+  ,dynamic_split            BOOLEAN         DEFAULT FALSE       -- Enable auto split data in case of spikes in volumes
+  ,process_rowlimit         NUMERIC         DEFAULT 0           -- Volume spike threshold for Auto split. 0 => disabled
   ,enabled                  BOOLEAN         DEFAULT TRUE
-  ,visible                  BOOLEAN         DEFAULT TRUE   -- Incase duplicate tasks are required (will require reference to self)
-  ,hold_applied             BOOLEAN         DEFAULT FALSE
-  ,allow_gaps               BOOLEAN         DEFAULT FALSE
-  ,allow_parallel_load      BOOLEAN         DEFAULT FALSE
-  ,keep_together            BOOLEAN         DEFAULT TRUE-- [y/n]
+  ,visible                  BOOLEAN         DEFAULT TRUE        -- In case duplicate tasks are required (will require reference to self)
+  ,hold_applied             BOOLEAN         DEFAULT FALSE  
+  ,allow_gaps               BOOLEAN         DEFAULT FALSE       -- similar to keep together?
+  ,allow_parallel_load      BOOLEAN         DEFAULT FALSE  
+  ,keep_together            BOOLEAN         DEFAULT TRUE        -- [y/n]
   ,priority                 INTEGER
   ,pattern_match            VARCHAR(500)
   ,pattern_replace          VARCHAR(25)    -- use YYYY-MM-DD+HH24:MI:SS allows split by time part which can be taken as interval to handle hours >= 24
   ,date_format              VARCHAR(25)    -- use YYYY-MM-DD+HH24:MI:SS
   ,notes                    VARCHAR
+  ,currently_running        INTEGER         DEFAULT 0
+  ,awaiting_reprocess       INTEGER         DEFAULT 0 
   ,modified_at              TIMESTAMP WITH TIME ZONE DEFAULT NOW()
   ,modified_by              VARCHAR(50)              DEFAULT CURRENT_USER
 );
@@ -248,6 +246,7 @@ CREATE TABLE chain
   ,precursor_id             NUMERIC(10)
   ,successor_id             NUMERIC(10)
   ,kind                     VARCHAR(25)     -- KEY,CONFLICT,DEPENDENCY,CASCADE
+  ,precursor_status         VARCHAR         -- to be used with regex comparison on precursor status
   ,wait                     BOOLEAN                  DEFAULT FALSE
   ,enabled                  BOOLEAN                  DEFAULT TRUE  -- When disabling any task disable the dependency if it has wait = TRUE
   ,modified_at              TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -281,39 +280,35 @@ A task can be part of a workflow
 a workflow can
 
 */
+/*
+-- option to be explored for greater flexibility in using optional parameters when executing manual tasks
+-- this may impact the way the task has to be initiated.
+-- manual executions would be run using the anytime schedule
+-- any restrictions on the number of running processes?
 
-CREATE SEQUENCE clone_id_sq
-     START WITH 1
-   INCREMENT BY 1;
-
-CREATE TABLE clone
-(
-   id                       NUMERIC(10)     PRIMARY KEY DEFAULT NEXTVAL('clone_id_sq')
-   ,task_id                  NUMERIC(10)     
-   ,clone_number             NUMERIC(10)
-   ,stop_on_upper_bound      BOOLEAN         DEFAULT FALSE
-   ,clone_reason             VARCHAR
-   ,parameter_expression     VARCHAR
-   ,ts_lower_bound           TIMESTAMP 
-   ,ts_upper_bound           TIMESTAMP -- after it reaches the ub it will not run anymore 
-);  
-
+-- List of optional parameters
 CREATE SEQUENCE parameter_id_sq
      START WITH 1
    INCREMENT BY 1;
 
 CREATE TABLE parameter
 (
-   id                       NUMERIC(10)     PRIMARY KEY DEFAULT NEXTVAL('clone_id_sq')
-   ,clone_id
-   ,seq                      NUMERIC(10)
-   ,data_type
-   ,column_name
-   ,expression               -- like = <> > <
+   id                       NUMERIC(10)     PRIMARY KEY DEFAULT NEXTVAL('parameter_id_sq')
+  ,task_id                  NUMERIC(10)
+  ,kind                     VARCHAR(25)     -- 'OPTIONAL, stage? can this be used in one of the filter stages?'
+  ,entity_name              VARCHAR(50)     -- source entity this applies to
+  ,field_name               VARCHAR(50)     -- source entity field this applies to
+  ,data_type                VARCHAR(25)     -- data type of the field
+  ,condition                VARCHAR(25)     -- IN, Not IN, = , like, <> between
+  ,enabled                  BOOLEAN                  DEFAULT TRUE
+  ,modified_at              TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  ,modified_by              VARCHAR(50)              DEFAULT CURRENT_USER
 );
-create table core.paramvalue
-(
-  id
-  ,parameter_id
-  ,value          varchar
-) ;  
+
+ALTER INDEX parameter_pkey SET TABLESPACE cf_core_idx;
+
+ALTER TABLE parameter
+        ADD CONSTRAINT parameter_precursor_fk
+               FOREIGN KEY (task_id)
+            REFERENCES task (id);
+*/

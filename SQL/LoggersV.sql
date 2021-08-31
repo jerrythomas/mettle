@@ -18,8 +18,8 @@ SELECT p.id
       ,p.slicing_mode
       ,p.ts_lower_bound
       ,p.ts_upper_bound
-      ,p.ns_lower_bound
-      ,p.ns_upper_bound
+      --,p.ns_lower_bound
+      --,p.ns_upper_bound
       ,p.server
       ,p.error_file
       ,p.trace_file

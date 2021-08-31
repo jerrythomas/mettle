@@ -1,7 +1,7 @@
 -- $Header Schedule.sql 0.01 11-Dec-2007 Jerry
 /*
  * File Name  : Schedule.sql
- * Purpose    : Store the the schedules.
+ * Purpose    : Store the schedules.
  * Author     : Jerry Thomas
  * Version    : 0.01
  * Created On : 11-Dec-2007
@@ -129,7 +129,7 @@ CREATE INDEX timetable_fkey
 
 
 /*
-do we need this to break down the schedule string into the timetable values or would it be preferable to do thhe breakdown using the application code. downside of using application code would be that there would not be a way to trace the timetable values based on the rule which should be ok.
+
 
 CREATE SEQUENCE sked_granular_id_sq
      START WITH 1

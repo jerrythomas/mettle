@@ -130,6 +130,7 @@ CREATE TABLE Connection
     Instance              VARCHAR(100)
     connectString         VARCHAR(200)
     connect_using         VARCHAR(100)
+    Pool_Size             integer
 );
 
 CREATE TABLE IKNADM_ENTITY_RELATIONS_ADM

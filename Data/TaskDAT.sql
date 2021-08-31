@@ -7,7 +7,7 @@ copy core.task (
 )
 from
 --E'E:\\Code\\CampFire\\Source\\SQL\\task.csv' WITH CSV HEADER ;
-'/volumes/TRANSIT-2GB/Code/Campfire/Source/SQL/task.csv' WITH CSV HEADER;
+'/Users/Jerry/Versions/Campfire/Data/task.csv' WITH CSV HEADER;
 update core.task set process_offset = '00:00:00';
 update core.task set ts_start_with = '2009-01-01';
 update core.task

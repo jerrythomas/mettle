@@ -1,44 +1,50 @@
--- $Header ScheduleV.sql 0.01 27-May-2009 Jerry
-/*---------------------------------------------------------------------------*\
-   File Name  : ScheduleV.sql
-   Author     : Jerry Thomas
-   Version    : 0.01
-   Created On : 11-Dec-2007
-
+-- $Header ScheduleV.sql 0.01 27-May-2009 [Jerry Thomas]
+/*
+---------------------------------------------------------------------------
    Purpose    : Store the the schedule views.
-
+move this comment block into a design document
  so far this should work for all kinds of schedules.
  creating the time limit entries may become complicated
 
  Schedules for different times of the day & specific timed runs
- Types of schedules
-1 Automatic runs for incremental extraction. only needs to have a time to
-run , extract in parallel load in sequence
---2 Scheduled at specific times of the day or dates. This one has to run at
-the specified times.
---3 File or other trigger based. Can be treated as 1, however the file should
-trigger a specific instance only Say date based.
-4 Dependencies that should run immediately after the predecessor has run
-Schedule Type {AUTO,TRIGGER,TIMED,
- All requests should be selected in sequence of dates
- No request should be running for same entity
- No request should be running for same entity
-1. all active data xfer (hold/enabled)
-2. should not have any "wait" dependencies which have not completed to the
-same or greater end date
-3. should have < max_parallel extractions running at the time
-4. should not have any dependencies or conflicts running at the same time
-5. should obey the limits if imposed.
-6. Reprocessing instances should have higher priority
-7. should not have more than max reprocess errors for the reprocessed
-instances
---8. should not allow a process with dates > any errored process if the
-(maintain integrity flag is set) - this will also control whether the loads
-should be sequential or parallel
 
--- Should be segmente as queries for auto, timed, reprocess,
--- need additional views for checking if the interface can proceed with the
-load or it should wait.
+ <h1>Types of schedules</h1>
+ <h2>AUTO</h2>
+ <p>Automatic runs for incremental extraction, trasfer & processing.</p>
+ <ul>
+   <li>Schedules specify a period of the day when the process can execute</li>
+   <li>A preferred start time can be suggested, however dependencies may impact actual execution time.</li>
+   <li>Extractions are usually executed in parallel</li>
+   <li>Loads are executed sequentially to avoid older updates to override newer updates. This can also be parallized by implementing a check to verify that the update is the latest. However the check will have to rely on an audit column in the target table.</li>
+ </ul>
+          
+ <h2>TIME</h2>
+ <p>Scheduled at specific times of the day or dates. This one has to run at the specified times. </p>
+ 
+ <h2>TRIG</h2>
+ <p> File or other trigger based. Can be treated as 1, however the file should trigger a specific instance only say date based.</p>
+ 
+ <h1>Dependencies</h1>
+ <p>Dependencies that should run immediately after the predecessor has run</p>
+
+<h1>Schedule Type</h1>
+ {AUTO,TRIGGER,TIMED,
+ <ul>
+ <li>All requests should be selected in sequence of dates</li>
+ <li>No request should be running for same entity</li>
+ <li>No request should be running for same entity</li>
+ <li>all active data transfer (hold/enabled)</li>
+ <li>should not have any "wait" dependencies which have not completed to the same or greater end date</li>
+ <li>should have < max_parallel extractions running at the time</li>
+ <li>should not have any dependencies or conflicts running at the same time</li>
+ <li>should obey the limits if imposed.</li>
+ <li>Reprocessing instances should have higher priority</li>
+ <li>should not have more than max reprocess errors for the reprocessed instances</li>
+ <li>should not allow a process with dates > any failed process if the (maintain integrity flag is set) - this will also control whether the loads should be sequential or parallel</li>
+ </ul>
+
+-- Should be segmented as queries for auto, timed, reprocess,
+-- need additional views for checking if the interface can proceed with the load or it should wait.
 -- core.ready_for_load_v
 -- core.
 
@@ -55,6 +61,7 @@ DROP VIEW IF EXISTS core.tasks_auto_v;
 DROP VIEW IF EXISTS core.auto_schedule_v;
 DROP VIEW IF EXISTS core.timed_schedule_v;
 
+/*
 --------------------------------------------------------------------------------
 -- View Name  : timed_schedule_v
 -- Author     : Jerry Thomas
@@ -63,7 +70,7 @@ DROP VIEW IF EXISTS core.timed_schedule_v;
 
 -- Purpose    : Schedules for the time based scheduled tasks
 --------------------------------------------------------------------------------
-
+*/
 CREATE OR REPLACE VIEW core.timed_schedule_v
 AS
 SELECT s.id
@@ -78,7 +85,24 @@ SELECT s.id
       ,c.date
       ,c.date + tt.time_of_day                   AS schedule_ts
   FROM core.schedule    s
-      ,core.timetable   tt
+       INNER JOIN core.timetable tt
+               ON tt.schedule_id    = s.id 
+              AND tt.is_restriction = false
+       INNER JOIN core.calendar c
+               ON c.date <= NOW() - tt.time_of_day
+              AND c.dow   = COALESCE(tt.day_of_week,c.dow)
+              AND c.month = COALESCE(tt.month,c.month)
+              AND c.day   = core.DayOf(c.date, tt.day_of_month)               
+ WHERE CURRENT_TIME   BETWEEN tt.run_strt_ts
+                          AND tt.run_stop_ts
+   AND NOT EXISTS (SELECT 1
+                     FROM core.timetable   ttx
+                    WHERE ttx.schedule_id    = s.id
+                      AND ttx.is_restriction = TRUE
+                      AND COALESCE(ttx.day_of_week,EXTRACT(DOW FROM NOW())) = EXTRACT(DOW FROM NOW())
+                      AND CURRENT_TIME   BETWEEN ttx.run_strt_ts
+                                             AND ttx.run_stop_ts);  
+/*      ,core.timetable   tt
       ,core.calendar    c
  WHERE tt.schedule_id                                     = s.id
    AND tt.is_restriction                                  = FALSE
@@ -95,6 +119,8 @@ SELECT s.id
                       AND COALESCE(ttx.day_of_week,EXTRACT(DOW FROM NOW())) = EXTRACT(DOW FROM NOW())
                       AND CURRENT_TIME   BETWEEN ttx.run_strt_ts
                                              AND ttx.run_stop_ts);
+*/
+/*
 --------------------------------------------------------------------------------
 -- View Name  : auto_schedule_v
 -- Author     : Jerry Thomas
@@ -105,7 +131,7 @@ SELECT s.id
 -- Comments   : Tasks run now based on the allowed execution times defined in
 --              the schedule
 --------------------------------------------------------------------------------
-
+*/
 CREATE OR REPLACE VIEW core.auto_schedule_v
 AS
 SELECT s.id
@@ -119,7 +145,26 @@ SELECT s.id
       ,tt.run_stop_ts
       ,c.date
       ,c.date::TIMESTAMP WITH TIME ZONE        AS schedule_ts
-  FROM core.schedule    s
+ FROM core.schedule    s
+      INNER JOIN core.timetable tt
+              ON tt.schedule_id    = s.id 
+             AND tt.is_restriction = false
+      INNER JOIN core.calendar c
+              ON c.date <= NOW() - tt.time_of_day   -- (for auto add condition =)
+             AND c.dow   = COALESCE(tt.day_of_week,c.dow)
+             AND c.month = COALESCE(tt.month,c.month)
+             AND c.day   = core.DayOf(c.date, tt.day_of_month)               
+WHERE CURRENT_TIME   BETWEEN tt.run_strt_ts
+                         AND tt.run_stop_ts
+  AND NOT EXISTS (SELECT 1
+                    FROM core.timetable   ttx
+                   WHERE ttx.schedule_id    = s.id
+                     AND ttx.is_restriction = TRUE
+                     AND COALESCE(ttx.day_of_week,EXTRACT(DOW FROM NOW())) = EXTRACT(DOW FROM NOW())
+                     AND CURRENT_TIME   BETWEEN ttx.run_strt_ts
+                                            AND ttx.run_stop_ts);  
+/*                                            
+                                              FROM core.schedule    s
       ,core.timetable   tt
       ,core.calendar    c
  WHERE tt.schedule_id                                     = s.id
@@ -137,7 +182,8 @@ SELECT s.id
                       AND COALESCE(ttx.day_of_week,EXTRACT(DOW FROM NOW())) = EXTRACT(DOW FROM NOW())
                       AND CURRENT_TIME   BETWEEN ttx.run_strt_ts
                                              AND ttx.run_stop_ts);
-
+*/
+/*
 --------------------------------------------------------------------------------
 -- View Name  : tasks_timed_v
 -- Author     : Jerry Thomas
@@ -147,6 +193,7 @@ SELECT s.id
 -- Purpose    : Granular schedules for individual tasks that run at specified
 --              times and days
 --------------------------------------------------------------------------------
+*/
 -- App should update the executed schedule_ts into last_run_on
 CREATE OR REPLACE VIEW core.tasks_timed_v
 AS
@@ -160,8 +207,8 @@ SELECT t.id                                                   AS id
       ,t.ts_start_with                                        AS schedule_ts
       ,asv.schedule_ts + t.process_offset                     AS ts_lower_bound
       ,asv.schedule_ts + t.process_offset + t.ts_increment_by AS ts_upper_bound
-      ,NULL::NUMERIC                                          AS ns_lower_bound
-      ,NULL::NUMERIC                                          AS ns_upper_bound
+      --,NULL::NUMERIC                                          AS ns_lower_bound
+      --,NULL::NUMERIC                                          AS ns_upper_bound
       ,t.max_retries
       ,t.max_running
       ,t.hold_applied
@@ -170,16 +217,21 @@ SELECT t.id                                                   AS id
       ,t.allow_gaps
       ,t.allow_parallel_load
       ,t.process_offset
+      ,t.currently_running
+      ,t.awaiting_reprocess
   FROM core.task                t
-      ,core.timed_schedule_v   asv
- WHERE t.schedule_id     = asv.id
-   AND t.process_mode    = 'TIMED'
-   AND t.slicing_mode    = 'TIME'
-   AND t.ts_start_with   = asv.schedule_ts;
+       INNER JOIN core.timed_schedule_v   asv
+               ON t.schedule_id     = asv.id
+              AND t.process_mode    = 'TIMED'
+              AND t.slicing_mode    = 'TIME'
+              AND t.ts_start_with - asv.time_of_day = asv.date
+ WHERE (   t.max_running = 0
+        OR t.max_running > t.currently_running);
    --AND t.ts_start_with  <= NOW();
    --AND asv.schedule_ts  <= NOW();
 
 -- remember to set slice_last_run to ts_upper_bound - process_offset
+/*
 --------------------------------------------------------------------------------
 -- View Name  : tasks_auto_v
 -- Author     : Jerry Thomas
@@ -189,6 +241,7 @@ SELECT t.id                                                   AS id
 -- Purpose    : Granular schedules for individual incremental tasks that run
 --              automatically
 --------------------------------------------------------------------------------
+*/
 CREATE OR REPLACE VIEW core.tasks_auto_v
 AS
 SELECT t.id
@@ -200,14 +253,15 @@ SELECT t.id
       ,t.dynamic_split
       ,asv.schedule_ts + t.process_offset                               AS schedule_ts
       ,t.ts_start_with                                                  AS ts_lower_bound
-      ,LEAST((CASE WHEN (COALESCE(t.ts_increment_by,'00:00:00') = '00:00:00') THEN
-                     CURRENT_DATE + t.process_offset
+      --,LEAST((CASE WHEN (COALESCE(t.ts_increment_by,'00:00:00') = '00:00:00') THEN
+      ,LEAST((CASE WHEN (t.ts_increment_by = '00:00:00'::INTERVAL) THEN
+                       CURRENT_DATE + t.process_offset
                    ELSE
-                     t.ts_start_with + t.ts_increment_by
+                       t.ts_start_with + t.ts_increment_by
                END)
              ,CURRENT_DATE + t.process_offset)                          AS ts_upper_bound
-      ,ns_start_with                                                    AS ns_lower_bound
-      ,NULL::NUMERIC                                                    AS ns_upper_bound
+      --,ns_start_with                                                    AS ns_lower_bound
+      --,NULL::NUMERIC                                                    AS ns_upper_bound
       ,t.max_retries
       ,t.max_running
       ,t.hold_applied
@@ -222,6 +276,7 @@ SELECT t.id
    AND t.process_mode          = 'AUTO'
    AND t.slicing_mode          = 'TIME';
 
+/*
 --------------------------------------------------------------------------------
 -- View Name  : auto_precursor_runs_v
 -- Author     : Jerry Thomas
@@ -231,7 +286,37 @@ SELECT t.id
 -- Purpose    : Lists the status of the most recent precursors that should be
 --              processed for the auto incremental tasks
 --------------------------------------------------------------------------------
-
+*/
+CREATE OR REPLACE VIEW core.precursor_run_v
+AS
+SELECT c.precursor_id
+      ,c.successor_id
+      ,t.process_mode                                AS precursor_process_mode
+      ,(CASE WHEN c.kind          = 'CASCADE' 
+              AND p.completed_at IS NULL 
+             THEN 1
+             ELSE 0 END)                             AS cascade_running
+      ,(CASE WHEN c.kind          = 'CONFLICT' 
+              AND p.completed_at IS NULL 
+             THEN 1
+             ELSE 0 END)                             AS conflict_running
+      ,(CASE WHEN p.status IN ('Failed','Killed')
+              AND p.reprocessed = FALSE    
+             THEN 1
+             ELSE 0 END)                             AS has_failed
+      ,p.ts_lower_bound
+      ,p.ts_upper_bound
+      ,p.status
+      ,p.stage
+      ,c.precursor_status
+  FROM core.chain c
+       INNER JOIN core.task    t
+               ON t.id           = c.precursor_id
+              AND t.hold_applied = false
+       INNER JOIN logs.process p
+               ON p.task_id      = t.id;
+               
+               
 CREATE OR REPLACE VIEW core.auto_precursor_runs_v
 AS
 SELECT c.id
@@ -246,18 +331,23 @@ SELECT c.id
       ,p.initiated_at
       ,p.completed_at
   FROM core.chain   c
-       INNER JOIN      core.task    pt ON (    pt.id             = c.precursor_id
-                                           AND pt.enabled        = TRUE
-                                           AND pt.process_mode   = 'AUTO')
-       LEFT OUTER JOIN logs.process p  ON (    p.task_id         = c.precursor_id
-                                           AND p.status          = 'Sucessful'
-                                           AND p.reprocessed     = FALSE
-                                           AND p.ts_upper_bound >= CURRENT_DATE
-                                                                   - (CASE WHEN CURRENT_TIME < pt.process_offset::TIME
-                                                                           THEN '1 Day'
-                                                                           ELSE '0'
-                                                                       END)::interval)
- WHERE c.enabled   = TRUE;
+       INNER JOIN      core.task    pt 
+               ON (    pt.id             = c.precursor_id)
+       LEFT OUTER JOIN logs.process p  
+               ON (    p.task_id         = c.precursor_id
+                   AND p.status          = 'Successful'
+                   AND p.reprocessed     = FALSE
+                   AND p.ts_upper_bound >= CURRENT_DATE
+                                              - (CASE WHEN CURRENT_TIME < pt.process_offset::TIME
+                                                      THEN '1 Day'
+                                                      ELSE '0'
+                                                  END)::INTERVAL)
+ WHERE c.enabled   
+   AND pt.enabled        
+   AND pt.process_mode   = 'AUTO';
+
+  
+/*
 --------------------------------------------------------------------------------
 -- View Name  : runnable_v
 -- Author     : Jerry Thomas
@@ -277,6 +367,7 @@ SELECT c.id
 --  are not running at the same time
 
 --------------------------------------------------------------------------------
+*/
 CREATE OR REPLACE VIEW core.runnable_v
 AS
 -- Automatic incremental tasks
@@ -289,8 +380,8 @@ SELECT t.id
       ,t.schedule_ts
       ,t.ts_lower_bound
       ,t.ts_upper_bound
-      ,t.ns_lower_bound
-      ,t.ns_upper_bound
+      --,t.ns_lower_bound
+      --,t.ns_upper_bound
       ,t.max_retries
       ,t.max_running
       ,t.hold_applied
@@ -305,7 +396,8 @@ SELECT t.id
    -- All Key reference dependencies should have completed till the highest scheduled slice
    AND TRUE = (SELECT (CASE WHEN COUNT(DISTINCT apr.task_id) = COUNT(DISTINCT apr.precursor_id) THEN TRUE
                             WHEN COUNT(DISTINCT apr.precursor_id) = 0 THEN TRUE
-                            ELSE FALSE END)
+                            ELSE FALSE 
+                        END)
                  FROM core.auto_precursor_runs_v apr
                 WHERE apr.kind           IN ('KEY','CASCADE')
                   AND apr.successor_id    = t.id
@@ -318,7 +410,8 @@ SELECT t.id
                     WHERE c.successor_id      = t.id
                       AND p.task_id           = c.precursor_id
                       AND p.reprocessed       = FALSE
-                      AND p.status       NOT IN  ('Sucessful','Failed','Killed')) -- as good as checking p.completed_at is not null
+                      --AND p.status       NOT IN  ('Sucessful','Failed','Killed')
+                      AND p.completed_at     IS NOT NULL)
    -- Earlier process that has failed should be reprocessed first, assuming that gaps are not allowed
    AND NOT EXISTS (SELECT p.id
                      FROM logs.process p
@@ -331,9 +424,10 @@ SELECT t.id
    AND (   max_running = 0
         OR max_running > (SELECT COUNT(p.id)
                             FROM logs.process p
-                           WHERE p.task_id                   = t.id
+                           WHERE p.task_id          = t.id
                              AND COALESCE(p.stage,'Extract') = 'Extract'
-                             AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             --AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             AND p.completed_at     IS NOT NULL
                          )
        )
 UNION ALL
@@ -347,8 +441,8 @@ SELECT t.id
       ,t.schedule_ts
       ,t.ts_lower_bound
       ,t.ts_upper_bound
-      ,t.ns_lower_bound
-      ,t.ns_upper_bound
+      --,t.ns_lower_bound
+      --,t.ns_upper_bound
       ,t.max_retries
       ,t.max_running
       ,t.hold_applied
@@ -366,11 +460,15 @@ SELECT t.id
                         END)
                  FROM core.chain   c
                       LEFT OUTER JOIN logs.process p  ON (    c.precursor_id = p.task_id
-                                                          AND p.status       = 'Sucessful'
-                                                          AND p.reprocessed  = FALSE)
+                                                          --AND p.status       = 'Sucessful'
+                                                          AND p.status      ~* c.precursor_status
+                                                          AND p.reprocessed  = FALSE
+                                                          AND p.completed_at IS NOT NULL)
                       LEFT OUTER JOIN logs.process f  ON (    c.precursor_id = f.task_id
-                                                          AND f.status       = 'Failed'
-                                                          AND f.reprocessed  = FALSE)
+                                                          --AND f.status       = 'Failed'
+                                                          AND p.status      !~* c.precursor_status
+                                                          AND f.reprocessed  = FALSE
+                                                          AND p.completed_at IS NOT NULL)
                 WHERE c.kind                                   = 'CASCADE'
                   AND c.enabled                                = TRUE
                   AND c.successor_id                           = t.id
@@ -385,13 +483,14 @@ SELECT t.id
                       AND c.kind              = 'CONFLICT'
                       AND c.enabled           = TRUE
                       AND p.reprocessed       = FALSE
-                      AND p.status       NOT IN  ('Sucessful','Failed','Killed'))
+                      AND p.status       NOT IN  ('Successful','Failed','Killed'))
    -- Don't pick up any task where the number of running instances is already up to max allowed
    AND (   max_running = 0
         OR max_running > (SELECT COUNT(p.id)
                             FROM logs.process p
                            WHERE p.task_id          = t.id
-                             AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             --AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             AND p.completed_at     IS NOT NULL
                          )
        )
 UNION ALL
@@ -405,8 +504,8 @@ SELECT t.id
       ,p.scheduled_at
       ,p.ts_lower_bound
       ,p.ts_upper_bound
-      ,p.ns_lower_bound
-      ,p.ns_upper_bound
+      --,p.ns_lower_bound
+      --,p.ns_upper_bound
       ,t.max_retries
       ,t.max_running
       ,t.hold_applied
@@ -426,13 +525,15 @@ SELECT t.id
                       AND p.task_id           = c.precursor_id
                      -- AND c.kind              = 'CONFLICT'
                       AND p.reprocessed       = FALSE
-                      AND p.status       NOT IN  ('Sucessful','Failed','Killed'))
+                      --AND p.status       NOT IN  ('Sucessful','Failed','Killed')
+                      AND p.completed_at     IS NOT NULL)
    -- Don't pick up any task where the number of running instances is al'Failed'ready up to max allowed
    AND (   max_running = 0
         OR max_running > (SELECT count(p.id)
                             FROM logs.process p
                            WHERE p.task_id          = t.id
-                             AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             --AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             AND p.completed_at     IS NOT NULL
                          )
        )
    -- Don't reprocess more than the allowed number of errors
@@ -445,15 +546,16 @@ SELECT t.id
                          )
        );
 
-
+/*
 --------------------------------------------------------------------------------
 -- View Name  : triggered_v
 -- Author     : Jerry Thomas
 -- Version    : 0.01
 -- Created On : 26-May-2009
 
--- Purpose    : Tasks that are trigerred by file or external
+-- Purpose    : Tasks that are trigerred by file or external events
 --------------------------------------------------------------------------------
+*/
 CREATE OR REPLACE VIEW core.triggered_v
 AS
 SELECT t.id                                                              AS id

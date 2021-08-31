@@ -1,0 +1,238 @@
+"precursor","successor","kind","wait","enabled"
+"(SELECT id from core.task where name = 'GL Accounts Dimension - CND')","(SELECT id from core.task where name = 'Resource Details Dimension - CND')","KEY",f,t
+"(SELECT id from core.task where name = 'Suppliers Dimension - CHQ')","(SELECT id from core.task where name = 'AP Transaction Fact - CHQ')","KEY",f,t
+"(SELECT id from core.task where name = 'Suppliers Dimension - CHQ')","(SELECT id from core.task where name = 'PO Transaction Fact - CHQ')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - NED')","(SELECT id from core.task where name = 'Installed Items Dimension - NED')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - NED')","(SELECT id from core.task where name = 'Order Details Fact - NED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - SED')","(SELECT id from core.task where name = 'Account Sites Dimension - SED')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - MAD')","(SELECT id from core.task where name = 'Resource Details Dimension - MAD')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - NWD')","(SELECT id from core.task where name = 'Resource Details Dimension - NWD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - CND')","(SELECT id from core.task where name = 'Account Sites Dimension - CND')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - CND')","(SELECT id from core.task where name = 'Installed Items Dimension - CND')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - FLD')","(SELECT id from core.task where name = 'Installed Items Dimension - FLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - FLD')","(SELECT id from core.task where name = 'Order Details Fact - FLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - GLD')","(SELECT id from core.task where name = 'Installed Items Dimension - GLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - GLD')","(SELECT id from core.task where name = 'Order Details Fact - GLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Suppliers Dimension - CAD')","(SELECT id from core.task where name = 'AP Transaction Fact - CAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Suppliers Dimension - CAD')","(SELECT id from core.task where name = 'PO Transaction Fact - CAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - FLD')","(SELECT id from core.task where name = 'Account Sites Dimension - FLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - FLD')","(SELECT id from core.task where name = 'Installed Items Dimension - FLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - TLD')","(SELECT id from core.task where name = 'Order Details Fact - TLD')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - NED')","(SELECT id from core.task where name = 'Resource Details Dimension - NED')","KEY",f,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'Installed Items Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'Organization Item Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'AR Transaction Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'Contracts Top Line Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'Debrief Details Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'Material Transactions and Distributions Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'Order Details Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'PO Transaction Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'Task Daily Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'WIP Transactions and Distributions Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'Organization Item Summary table - eIKON')","KEY",t,t
+"(SELECT id from core.task where name = 'Master Item Dimension - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Suppliers Dimension - IDS')","(SELECT id from core.task where name = 'AP Transaction Fact - IDS')","KEY",f,t
+"(SELECT id from core.task where name = 'Suppliers Dimension - IDS')","(SELECT id from core.task where name = 'PO Transaction Fact - IDS')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - eIKON')","(SELECT id from core.task where name = 'Serial Items Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - eIKON')","(SELECT id from core.task where name = 'Material Transactions and Distributions Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - eIKON')","(SELECT id from core.task where name = 'On-Hand Details Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - eIKON')","(SELECT id from core.task where name = 'Supply Details Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - eIKON')","(SELECT id from core.task where name = 'WIP Detail Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - eIKON')","(SELECT id from core.task where name = 'WIP Transactions and Distributions Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - eIKON')","(SELECT id from core.task where name = 'Organization Item Summary table - eIKON')","KEY",t,t
+"(SELECT id from core.task where name = 'Account Party Dimension - MAD')","(SELECT id from core.task where name = 'Account Sites Dimension - MAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - MAD')","(SELECT id from core.task where name = 'Installed Items Dimension - MAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Field Tech Dimension - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - CED')","(SELECT id from core.task where name = 'Account Sites Dimension - CED')","KEY",f,t
+"(SELECT id from core.task where name = 'Rep Roles Relations Dimension - eIKON')","(SELECT id from core.task where name = 'Group Managers Materilialiazed View - eIKON')","KEY",t,t
+"(SELECT id from core.task where name = 'Rep Roles Relations Dimension - eIKON')","(SELECT id from core.task where name = 'Rep Group Role Materilialiazed View - eIKON')","KEY",t,t
+"(SELECT id from core.task where name = 'Organization Dimension - GLD')","(SELECT id from core.task where name = 'Installed Items Dimension - GLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - GLD')","(SELECT id from core.task where name = 'Organization Item Dimension - GLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - GLD')","(SELECT id from core.task where name = 'On-Hand Details Fact - GLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - CND')","(SELECT id from core.task where name = 'Installed Items Dimension - CND')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - CND')","(SELECT id from core.task where name = 'Order Details Fact - CND')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - NED')","(SELECT id from core.task where name = 'On-Hand Details Fact - NED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - IDS')","(SELECT id from core.task where name = 'Account Sites Dimension - IDS')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - FLD')","(SELECT id from core.task where name = 'On-Hand Details Fact - FLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - NED')","(SELECT id from core.task where name = 'Account Sites Dimension - NED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - NED')","(SELECT id from core.task where name = 'Installed Items Dimension - NED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - NWD')","(SELECT id from core.task where name = 'Installed Items Dimension - NWD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - NWD')","(SELECT id from core.task where name = 'Order Details Fact - NWD')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - FLD')","(SELECT id from core.task where name = 'Installed Items Dimension - FLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - FLD')","(SELECT id from core.task where name = 'Order Details Fact - FLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - FLD')","(SELECT id from core.task where name = 'Installed Items Dimension - FLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - FLD')","(SELECT id from core.task where name = 'Organization Item Dimension - FLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - FLD')","(SELECT id from core.task where name = 'On-Hand Details Fact - FLD')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - CAD')","(SELECT id from core.task where name = 'AP Transaction Fact - CAD')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - CAD')","(SELECT id from core.task where name = 'AR Adjustment Fact - CAD')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - CAD')","(SELECT id from core.task where name = 'PO Transaction Fact - CAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - MAD')","(SELECT id from core.task where name = 'Installed Items Dimension - MAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - MAD')","(SELECT id from core.task where name = 'Order Details Fact - MAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - CED')","(SELECT id from core.task where name = 'Order Details Fact - CED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - NWD')","(SELECT id from core.task where name = 'Account Sites Dimension - NWD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - NWD')","(SELECT id from core.task where name = 'Installed Items Dimension - NWD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - WED')","(SELECT id from core.task where name = 'Installed Items Dimension - WED')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - WED')","(SELECT id from core.task where name = 'Organization Item Dimension - WED')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - WED')","(SELECT id from core.task where name = 'On-Hand Details Fact - WED')","KEY",f,t
+"(SELECT id from core.task where name = 'Installed Items Dimension - eIKON')","(SELECT id from core.task where name = 'Contracts Sub Line Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Installed Items Dimension - eIKON')","(SELECT id from core.task where name = 'Equipment Stats Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Installed Items Dimension - eIKON')","(SELECT id from core.task where name = 'FA Distributions Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Installed Items Dimension - eIKON')","(SELECT id from core.task where name = 'Task Daily Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Installed Items Dimension - eIKON')","(SELECT id from core.task where name = 'Organization Item Summary table - eIKON')","KEY",t,t
+"(SELECT id from core.task where name = 'Installed Items Dimension - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Vertex Geocode Dimension - eIKON')","(SELECT id from core.task where name = 'AR Geocode Exception - eIKON')","KEY",t,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - CEN')","(SELECT id from core.task where name = 'Resource Details Dimension - CEN')","KEY",f,t
+"(SELECT id from core.task where name = 'Sales Group Relations Dimension - eIKON')","(SELECT id from core.task where name = 'Rep Roles Relations Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Sales Group Relations Dimension - eIKON')","(SELECT id from core.task where name = 'Rep Opportunity And MIF fact tables - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - eIKON')","(SELECT id from core.task where name = 'Field Tech Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - eIKON')","(SELECT id from core.task where name = 'Installed Items Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - eIKON')","(SELECT id from core.task where name = 'Rep Roles Relations Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - eIKON')","(SELECT id from core.task where name = 'AR Transaction Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - eIKON')","(SELECT id from core.task where name = 'Order Details Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - eIKON')","(SELECT id from core.task where name = 'Rep Opportunity And MIF fact tables - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - eIKON')","(SELECT id from core.task where name = 'Sales Credits Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - WED')","(SELECT id from core.task where name = 'Installed Items Dimension - WED')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - WED')","(SELECT id from core.task where name = 'Order Details Fact - WED')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - CHQ')","(SELECT id from core.task where name = 'AP Transaction Fact - CHQ')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - CHQ')","(SELECT id from core.task where name = 'AR Adjustment Fact - CHQ')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - CHQ')","(SELECT id from core.task where name = 'PO Transaction Fact - CHQ')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - WED')","(SELECT id from core.task where name = 'On-Hand Details Fact - WED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - WED')","(SELECT id from core.task where name = 'Account Sites Dimension - WED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - WED')","(SELECT id from core.task where name = 'Installed Items Dimension - WED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - GLD')","(SELECT id from core.task where name = 'Installed Items Dimension - GLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - GLD')","(SELECT id from core.task where name = 'Order Details Fact - GLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - SED')","(SELECT id from core.task where name = 'Order Details Fact - SED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - WED')","(SELECT id from core.task where name = 'Installed Items Dimension - WED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - WED')","(SELECT id from core.task where name = 'Order Details Fact - WED')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - eIKON')","(SELECT id from core.task where name = 'Installed Items Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - eIKON')","(SELECT id from core.task where name = 'Organization Item Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - eIKON')","(SELECT id from core.task where name = 'Serial Items Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - eIKON')","(SELECT id from core.task where name = 'Material Transactions and Distributions Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - eIKON')","(SELECT id from core.task where name = 'On-Hand Details Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - eIKON')","(SELECT id from core.task where name = 'Supply Details Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - eIKON')","(SELECT id from core.task where name = 'WIP Detail Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - eIKON')","(SELECT id from core.task where name = 'WIP Transactions and Distributions Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - eIKON')","(SELECT id from core.task where name = 'Organization Item Summary table - eIKON')","KEY",t,t
+"(SELECT id from core.task where name = 'Organization Dimension - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - GLD')","(SELECT id from core.task where name = 'On-Hand Details Fact - GLD')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - IOSC')","(SELECT id from core.task where name = 'AP Transaction Fact - IOSC')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - IOSC')","(SELECT id from core.task where name = 'AR Adjustment Fact - IOSC')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - IOSC')","(SELECT id from core.task where name = 'PO Transaction Fact - IOSC')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - FLD')","(SELECT id from core.task where name = 'Resource Details Dimension - FLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - TLD')","(SELECT id from core.task where name = 'Account Sites Dimension - TLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - CEN')","(SELECT id from core.task where name = 'Account Sites Dimension - CEN')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - CEN')","(SELECT id from core.task where name = 'Installed Items Dimension - CEN')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - CEN')","(SELECT id from core.task where name = 'On-Hand Details Fact - CEN')","KEY",f,t
+"(SELECT id from core.task where name = 'Branch Dimension - eIKON')","(SELECT id from core.task where name = 'Field Tech Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - CEN')","(SELECT id from core.task where name = 'Installed Items Dimension - CEN')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - CEN')","(SELECT id from core.task where name = 'Order Details Fact - CEN')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - NWD')","(SELECT id from core.task where name = 'Installed Items Dimension - NWD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - NWD')","(SELECT id from core.task where name = 'Organization Item Dimension - NWD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - NWD')","(SELECT id from core.task where name = 'On-Hand Details Fact - NWD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - CND')","(SELECT id from core.task where name = 'Installed Items Dimension - CND')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - CND')","(SELECT id from core.task where name = 'Organization Item Dimension - CND')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - CND')","(SELECT id from core.task where name = 'On-Hand Details Fact - CND')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - MAD')","(SELECT id from core.task where name = 'On-Hand Details Fact - MAD')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'Resource Details Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'AP Transaction Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'AR Adjustment Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'AR Distribution Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'FA Distributions Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'FA Invoices Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'GL Balances Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'GL Journals Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'Manual JE Transaction Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'Material Transactions and Distributions Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'PO Transaction Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'WIP Detail Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - eIKON')","(SELECT id from core.task where name = 'WIP Transactions and Distributions Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - IDS')","(SELECT id from core.task where name = 'AP Transaction Fact - IDS')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - IDS')","(SELECT id from core.task where name = 'AR Adjustment Fact - IDS')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - IDS')","(SELECT id from core.task where name = 'PO Transaction Fact - IDS')","KEY",f,t
+"(SELECT id from core.task where name = 'Serial Items Dimension - eIKON')","(SELECT id from core.task where name = 'Material Unit Transactions Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - MAD')","(SELECT id from core.task where name = 'Installed Items Dimension - MAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - MAD')","(SELECT id from core.task where name = 'Order Details Fact - MAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - NWD')","(SELECT id from core.task where name = 'Installed Items Dimension - NWD')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - NWD')","(SELECT id from core.task where name = 'Order Details Fact - NWD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - CEN')","(SELECT id from core.task where name = 'Installed Items Dimension - CEN')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - CEN')","(SELECT id from core.task where name = 'Organization Item Dimension - CEN')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - CEN')","(SELECT id from core.task where name = 'On-Hand Details Fact - CEN')","KEY",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - WED')","(SELECT id from core.task where name = 'Resource Details Dimension - WED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - NED')","(SELECT id from core.task where name = 'Installed Items Dimension - NED')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - NED')","(SELECT id from core.task where name = 'Order Details Fact - NED')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - NWD')","(SELECT id from core.task where name = 'On-Hand Details Fact - NWD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - GLD')","(SELECT id from core.task where name = 'Account Sites Dimension - GLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - GLD')","(SELECT id from core.task where name = 'Installed Items Dimension - GLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - MAD')","(SELECT id from core.task where name = 'Installed Items Dimension - MAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - MAD')","(SELECT id from core.task where name = 'Organization Item Dimension - MAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - MAD')","(SELECT id from core.task where name = 'On-Hand Details Fact - MAD')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Item Dimension - CND')","(SELECT id from core.task where name = 'On-Hand Details Fact - CND')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - eIKON')","(SELECT id from core.task where name = 'Installed Items Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - eIKON')","(SELECT id from core.task where name = 'AR Transaction Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - eIKON')","(SELECT id from core.task where name = 'Contracts Header Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - eIKON')","(SELECT id from core.task where name = 'Contracts Top Line Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - eIKON')","(SELECT id from core.task where name = 'Order Details Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - eIKON')","(SELECT id from core.task where name = 'Task Daily Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Suppliers Dimension - IOSC')","(SELECT id from core.task where name = 'AP Transaction Fact - IOSC')","KEY",f,t
+"(SELECT id from core.task where name = 'Suppliers Dimension - IOSC')","(SELECT id from core.task where name = 'PO Transaction Fact - IOSC')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - CND')","(SELECT id from core.task where name = 'Installed Items Dimension - CND')","KEY",f,t
+"(SELECT id from core.task where name = 'Resource Details Dimension - CND')","(SELECT id from core.task where name = 'Order Details Fact - CND')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - eIKON')","(SELECT id from core.task where name = 'Account Sites Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Party Dimension - eIKON')","(SELECT id from core.task where name = 'Installed Items Dimension - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - NED')","(SELECT id from core.task where name = 'Installed Items Dimension - NED')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - NED')","(SELECT id from core.task where name = 'Organization Item Dimension - NED')","KEY",f,t
+"(SELECT id from core.task where name = 'Organization Dimension - NED')","(SELECT id from core.task where name = 'On-Hand Details Fact - NED')","KEY",f,t
+"(SELECT id from core.task where name = 'Suppliers Dimension - eIKON')","(SELECT id from core.task where name = 'AP Transaction Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Suppliers Dimension - eIKON')","(SELECT id from core.task where name = 'PO Transaction Fact - eIKON')","KEY",f,t
+"(SELECT id from core.task where name = 'Suppliers Dimension - eIKON')","(SELECT id from core.task where name = 'Tax Liability Summary - eIKON')","KEY",t,t
+"(SELECT id from core.task where name = 'Supply Details Fact - eIKON')","(SELECT id from core.task where name = 'Organization Item Summary table - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'Order Details Fact - eIKON')","(SELECT id from core.task where name = 'Trials Summary Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'Order Details Fact - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'Material Unit Transactions Fact - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'Material Transactions and Distributions Fact - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'GL Journals Fact - eIKON')","(SELECT id from core.task where name = 'Manual JE Transaction Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'Debrief Details Fact - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'Contracts Top Line Fact - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'Contracts Sub Line Fact - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'Contracts Header Fact - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'AR Transaction Fact - eIKON')","(SELECT id from core.task where name = 'Vertex Register Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'AR Distribution Fact - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'GL Journals Fact - eIKON')","(SELECT id from core.task where name = 'GL Trend Report - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'GL Journals Fact - eIKON')","(SELECT id from core.task where name = 'GL Journal Summary - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'FA Invoices Fact - eIKON')","(SELECT id from core.task where name = 'Tax Liability Summary - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'FA Distributions Fact - eIKON')","(SELECT id from core.task where name = 'Tax Liability Summary - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'Equipment Stats Fact - eIKON')","(SELECT id from core.task where name = 'Equipment Summary Fact - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'AR Transaction Fact - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'AP Transaction Fact - eIKON')","(SELECT id from core.task where name = 'Tax Liability Summary - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'Lookup Details - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","DEPENDENCY",f,t
+"(SELECT id from core.task where name = 'BILAT POS - Sale 7D for DA Trading - DAILY (ENT-RO)')","(SELECT id from core.task where name = 'DEMAND FCST - 7D for DA Trading - DAILY (CDS-RO)')","CONFLICT",f,t
+"(SELECT id from core.task where name = 'HYDRO - Sched 90D for DA Trading - DAILY (CDS-RO)')","(SELECT id from core.task where name = 'DEMAND FCST - 7D for DA Trading - DAILY (CDS-RO)')","CONFLICT",f,t
+"(SELECT id from core.task where name = 'METER - MV90 or GMS Best Avail Historical 7D for DA Trading - DAILY (CDS-RO)')","(SELECT id from core.task where name = 'DEMAND FCST - 7D for DA Trading - DAILY (CDS-RO)')","CONFLICT",f,t
+"(SELECT id from core.task where name = 'BILAT POS - Purchase 7D for DA Trading - DAILY (ENT-RO)')","(SELECT id from core.task where name = 'DEMAND FCST - 7D for DA Trading - DAILY (CDS-RO)')","CONFLICT",f,t
+"(SELECT id from core.task where name = 'BILAT POS - Purchase 90D for DA Trading - DAILY (ENT-RO)')","(SELECT id from core.task where name = 'DEMAND FCST - 7D for DA Trading - DAILY (CDS-RO)')","CONFLICT",f,t
+"(SELECT id from core.task where name = 'BILAT POS - Sale 90D for DA Trading - DAILY (ENT-RO)')","(SELECT id from core.task where name = 'DEMAND FCST - 7D for DA Trading - DAILY (CDS-RO)')","CONFLICT",f,t
+"(SELECT id from core.task where name = 'OASIS PRICE - HASP Energy 15Min Intrvl LMP - HRLY (PCI-CDS)')","(SELECT id from core.task where name = 'OASIS PRICE - RT Energy 5Min Intrvl LMP - HRLY (PCI-CDS)')","CONFLICT",f,t
+"(SELECT id from core.task where name = 'OASIS PRICE - DA AS Hrly Intrvl - DAILY (PCI-CDS)')","(SELECT id from core.task where name = 'OASIS PRICE - RT Energy 5Min Intrvl LMP - HRLY (PCI-CDS)')","CONFLICT",f,t
+"(SELECT id from core.task where name = 'OASIS PRICE - RT AS 15Min Intrvl - HRLY (PCI-CDS)')","(SELECT id from core.task where name = 'OASIS PRICE - RT Energy 5Min Intrvl LMP - HRLY (PCI-CDS)')","CONFLICT",f,t
+"(SELECT id from core.task where name = 'OASIS PRICE - DA Energy Hrly Intrvl LMP - DAILY (PCI-CDS)')","(SELECT id from core.task where name = 'OASIS PRICE - RT Energy 5Min Intrvl LMP - HRLY (PCI-CDS)')","CONFLICT",f,t
+"(SELECT id from core.task where name = 'AWARDS - DA - DAILY (PCI-CDS)')","(SELECT id from core.task where name = 'OASIS PRICE - RT Energy 5Min Intrvl LMP - HRLY (PCI-CDS)')","CONFLICT",f,t
+"(SELECT id from core.task where name = 'FUEL - Price Fcst Prompt Month + 2 - FILE (XLS-CDS)')","(SELECT id from core.task where name = 'FUEL - Price Fcst 7D - DAILY (CDS-PCI)')","CASCADE",f,t
+"(SELECT id from core.task where name = 'DEMAND FCST - DA - DAILY (EPS-CDS)')","(SELECT id from core.task where name = 'DEMAND FCST - 7D for DA Trading - DAILY (CDS-RO)')","CASCADE",f,t
+"(SELECT id from core.task where name = 'DEMAND FCST - DA - DAILY (EPS-CDS)')","(SELECT id from core.task where name = 'DEMAND FCST - DA - DAILY (CDS-PCI)')","CASCADE",f,t
+"(SELECT id from core.task where name = 'OASIS PRICE - RT Energy 5Min Intrvl LMP - HRLY (PCI-CDS)')","(SELECT id from core.task where name = 'OASIS PRICE - RT Energy 5Min Intrvl LMP - HRLY (CDS-ITRON)')","CASCADE",f,t
+"(SELECT id from core.task where name = 'GL Accounts Dimension - GLD')","(SELECT id from core.task where name = 'Resource Details Dimension - GLD')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - CEN')","(SELECT id from core.task where name = 'Installed Items Dimension - CEN')","KEY",f,t
+"(SELECT id from core.task where name = 'Account Sites Dimension - CEN')","(SELECT id from core.task where name = 'Order Details Fact - CEN')","KEY",f,t
+"(SELECT id from core.task where name = 'IFS Assets Fact Table - IOSC')","(SELECT id from core.task where name = 'Asset Reconciliation Summary Table - IOSC')","CASCADE",t,t
+"(SELECT id from core.task where name = 'Vertex Register Summary - eIKON')","(SELECT id from core.task where name = 'Tax Liability Summary - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","(SELECT id from core.task where name = 'Equipment PnL Summary - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","(SELECT id from core.task where name = 'Contracts Aggregate Fact - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'GL Journal Summary - eIKON')","(SELECT id from core.task where name = 'Tax Liability Summary - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'WIP Detail Fact - eIKON')","(SELECT id from core.task where name = 'WIP Serial Details Table - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'Vertex Register Fact - eIKON')","(SELECT id from core.task where name = 'Vertex Register Summary - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'Vertex Register Fact - eIKON')","(SELECT id from core.task where name = 'AR Geocode Exception - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'On-Hand Details Fact - eIKON')","(SELECT id from core.task where name = 'Organization Item Summary table - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'Material Unit Transactions Fact - eIKON')","(SELECT id from core.task where name = 'Trials Summary Fact - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'Material Transactions and Distributions Fact - eIKON')","(SELECT id from core.task where name = 'Trials Summary Fact - eIKON')","CASCADE",t,t
+"(SELECT id from core.task where name = 'Task Daily Fact - eIKON')","(SELECT id from core.task where name = 'Transaction Mapping Fact - eIKON')","DEPENDENCY",f,t
