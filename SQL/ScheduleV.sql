@@ -318,7 +318,8 @@ SELECT t.id
                     WHERE c.successor_id      = t.id
                       AND p.task_id           = c.precursor_id
                       AND p.reprocessed       = FALSE
-                      AND p.status       NOT IN  ('Sucessful','Failed','Killed'))
+                      --AND p.status       NOT IN  ('Sucessful','Failed','Killed')
+                      AND p.completed_at     IS NOT NULL)
    -- Earlier process that has failed should be reprocessed first, assuming that gaps are not allowed
    AND NOT EXISTS (SELECT p.id
                      FROM logs.process p
@@ -333,7 +334,8 @@ SELECT t.id
                             FROM logs.process p
                            WHERE p.task_id          = t.id
                              AND COALESCE(p.stage,'Extract') = 'Extract'
-                             AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             --AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             AND p.completed_at     IS NOT NULL
                          )
        )
 UNION ALL
@@ -366,11 +368,15 @@ SELECT t.id
                         END)
                  FROM core.chain   c
                       LEFT OUTER JOIN logs.process p  ON (    c.precursor_id = p.task_id
-                                                          AND p.status       = 'Sucessful'
-                                                          AND p.reprocessed  = FALSE)
+                                                          --AND p.status       = 'Sucessful'
+                                                          AND p.status      ~* c.precursor_status
+                                                          AND p.reprocessed  = FALSE
+                                                          AND p.completed_at IS NOT NULL)
                       LEFT OUTER JOIN logs.process f  ON (    c.precursor_id = f.task_id
-                                                          AND f.status       = 'Failed'
-                                                          AND f.reprocessed  = FALSE)
+                                                          --AND f.status       = 'Failed'
+                                                          AND p.status      !~* c.precursor_status
+                                                          AND f.reprocessed  = FALSE
+                                                          AND p.completed_at IS NOT NULL)
                 WHERE c.kind                                   = 'CASCADE'
                   AND c.enabled                                = TRUE
                   AND c.successor_id                           = t.id
@@ -391,7 +397,8 @@ SELECT t.id
         OR max_running > (SELECT COUNT(p.id)
                             FROM logs.process p
                            WHERE p.task_id          = t.id
-                             AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             --AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             AND p.completed_at     IS NOT NULL
                          )
        )
 UNION ALL
@@ -426,13 +433,15 @@ SELECT t.id
                       AND p.task_id           = c.precursor_id
                      -- AND c.kind              = 'CONFLICT'
                       AND p.reprocessed       = FALSE
-                      AND p.status       NOT IN  ('Sucessful','Failed','Killed'))
+                      --AND p.status       NOT IN  ('Sucessful','Failed','Killed')
+                      AND p.completed_at     IS NOT NULL)
    -- Don't pick up any task where the number of running instances is al'Failed'ready up to max allowed
    AND (   max_running = 0
         OR max_running > (SELECT count(p.id)
                             FROM logs.process p
                            WHERE p.task_id          = t.id
-                             AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             --AND p.status      NOT IN ('Sucessful','Failed','Killed')
+                             AND p.completed_at     IS NOT NULL
                          )
        )
    -- Don't reprocess more than the allowed number of errors
